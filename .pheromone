@@ -1,385 +1,77 @@
 {
-  "swarmConfig": {
-    "pheromoneFile": ".pheromone",
-    "version": "0.2.0-branch-doc-tracking",
-    "evaporationRates": {
-      "default": 0.1,
-      "state": 0.02,
-      "need": 0.08,
-      "problem": 0.05,
-      "priority": 0.04,
-      "dependency": 0.01,
-      "anticipatory": 0.15,
-      "branch_info": 0.01, // Slow evaporation for registry-like info
-      "doc_info": 0.01    // Slow evaporation for registry-like info
-    },
-    "explorationRate": 0.03,
-    "signalPruneThreshold": 0.1,
-    "signalAmplification": {
-      "repeatedSignalBoost": 1.5,
-      "maxAmplification": 5.0
-    },
-    "neo4j_config": {
-      "NEO4J_URI": "bolt://localhost:7687",
-      "NEO4J_USER": "neo4j",
-      "NEO4J_PASSWORD": "test1234",
-      "NEO4J_DATABASE": "mbpo"
-    },
-    "documentationConfig": {
-        "baseDocPath": "docs/",
-        "namingConventionHint": "Filenames should be descriptive, e.g., 'feature_UserAuthentication_ArchitectureOverview_v1.md', 'cr_ISSUE-123_BugfixReport_2023-10-27.txt'. Include type, relevant ID/name, and version/date where applicable.",
-        "defaultDocType": "general_documentation",
-        "autoPruneMergedBranchDocsAfterDays": null // Set to a number to enable, null to disable
-    },
-    "gitHubTrackingConfig": {
-        "defaultBaseBranch": "main", // Or 'develop', as per project strategy
-        "remoteName": "origin",
-        "pruneMergedBranchesFromRegistryAfterDays": 180, // How long to keep 'merged' status in registry before potential archival/removal
-        "staleBranchThresholdDays": 90 // For flagging branches with no activity
-    },
-    "signalCategories": {
-      "state": [
-        "project_state_new_blueprint_available",
-        "project_state_existing_codebase_loaded",
-        "project_initialization_complete",
-        "framework_scaffolding_complete",
-        "test_plan_complete_for_feature_X",
-        "tests_implemented_for_feature_X",
-        "coding_complete_for_feature_X",
-        "integration_complete_for_features_XYZ",
-        "system_validation_complete",
-        "comprehension_complete_for_area_Z",
-        "research_phase_A_complete",
-        "feature_overview_spec_created",
-        "architecture_defined_for_module_X",
-        "devops_build_system_initialized",
-        "devops_ci_pipeline_stub_created",
-        "devops_config_management_initialized",
-        "framework_boilerplate_created",
-        "debug_fix_proposed_for_feature_X",
-        "debug_analysis_complete_for_feature_X",
-        "security_review_passed_for_module",
-        "module_performance_optimized",
-        "documentation_updated_for_feature_X",
-        "firecrawl_action_successful",
-        "deployment_successful_to_env",
-        "iac_apply_successful",
-        "ci_pipeline_triggered",
-        "coding_attempt_complete_for_feature",
-        "reproducing_test_created_for_bug",
-        "branch_status_active_local",
-        "branch_status_active_on_remote",
-        "branch_status_merged",
-        "branch_status_integration_ready",
-        "documentation_file_registered"
-      ],
-      "need": [
-        "project_initialization_needed",
-        "framework_scaffolding_needed",
-        "feature_definition_complete_for_X",
-        "test_planning_needed_for_feature_X",
-        "test_implementation_needed_for_feature_X",
-        "coding_needed_for_feature_X",
-        "integration_needed_for_features_XYZ",
-        "system_validation_needed",
-        "comprehension_needed_for_area_Z",
-        "branch_creation_needed",
-        "documentation_creation_needed"
-      ],
-      "problem": [
-        "critical_bug_in_feature_X",
-        "system_level_bug_detected",
-        "integration_conflict_on_merge_ABC",
-        "security_vulnerability_found_in_M",
-        "performance_bottleneck_in_N",
-        "problem_research_blocker_identified",
-        "critical_issue_hinted_in_comprehension",
-        "mcp_tool_execution_failed",
-        "firecrawl_action_partial_failure",
-        "deployment_failed_to_env",
-        "feature_test_run_failed",
-        "coding_attempt_resulted_in_test_failure",
-        "performance_optimization_ineffective_or_problematic",
-        "branch_remote_not_found",
-        "branch_push_failed",
-        "branch_merge_failed_conflicts",
-        "documentation_missing_for_feature_X"
-      ],
-      "priority": [
-        "prioritize_feature_X_development",
-        "halt_feature_Y_pending_review",
-        "change_request_received_for_Y"
-      ],
-      "dependency": [
-        "feature_X_depends_on_feature_Y",
-        "component_A_depends_on_component_B"
-      ],
-      "anticipatory": [
-        "anticipate_integration_soon_for_feature_X",
-        "anticipate_coding_soon_for_feature_X",
-        "anticipate_testing_soon_for_feature_Y"
-      ],
-      "branch_info": [ // Category for signals specifically about branch registry updates
-        "github_branch_info_updated"
-      ],
-      "doc_info": [ // Category for signals specifically about documentation registry updates
-        "documentation_registry_updated"
-      ]
-    },
-    "signalPriorities": {
-      "default": 1.0,
-      "critical_bug_in_feature_X": 2.5,
-      "system_level_bug_detected": 3.0,
-      "security_vulnerability_found_in_M": 2.7,
-      "performance_bottleneck_in_N": 1.8,
-      "integration_conflict_on_merge_ABC": 2.2,
-      "halt_feature_Y_pending_review": 2.6,
-      "change_request_received_for_Y": 1.7,
-      "project_initialization_needed": 1.2,
-      "framework_scaffolding_needed": 1.1,
-      "branch_remote_not_found": 2.8, // High priority to resolve
-      "branch_merge_failed_conflicts": 2.3
-    },
-    "dependencySignals": {
-      "featureDependencies": true,
-      "componentDependencies": true,
-      "criticalPathTracking": true
-    },
-    "conflictResolution": {
-      "strategy": "highest_priority_first",
-      "tiebreakers": [
-        "signal_strength",
-        "signal_age",
-        "minimal_context_switching"
-      ]
-    },
-    "anticipatorySignals": {
-      "enabled": true,
-      "lookAheadSteps": 2,
-      "threshold": 0.7
-    },
-    "analyticsTracking": {
-      "enabled": true,
-      "historyLength": 20,
-      "bottleneckDetection": true,
-      "oscillationDetection": true
-    },
-    "emergencyThresholds": {
-      "security_vulnerability_found_in_M": 7.0,
-      "critical_bug_in_feature_X": 8.0,
-      "system_level_bug_detected": 9.0
-    },
-    "recruitmentThresholds": {
-      "Debugger_Targeted": {
-        "critical_bug_in_feature_X": 6.0,
-        "system_level_bug_detected": 8.0
-      },
-      "SecurityReviewer_Module": {
-        "security_vulnerability_found_in_M": 4.0
-      },
-      "Optimizer_Module": {
-        "performance_bottleneck_in_N": 5.0
-      },
-      "Integrator_Module": {
-        "integration_conflict_on_merge_ABC": 5.5
-      }
-    },
-    "signalTypes": [
-      "project_state_new_blueprint_available", "project_state_existing_codebase_loaded",
-      "project_initialization_needed", "project_initialization_complete",
-      "framework_scaffolding_needed", "framework_scaffolding_complete",
-      "feature_definition_complete_for_X",
-      "test_planning_needed_for_feature_X", "test_plan_complete_for_feature_X",
-      "test_implementation_needed_for_feature_X", "tests_implemented_for_feature_X",
-      "coding_needed_for_feature_X", "coding_complete_for_feature_X",
-      "coding_attempt_complete_for_feature", "coding_attempt_resulted_in_test_failure",
-      "integration_needed_for_features_XYZ", "integration_complete_for_features_XYZ",
-      "system_validation_needed", "system_validation_complete",
-      "change_request_received_for_Y",
-      "comprehension_needed_for_area_Z", "comprehension_complete_for_area_Z", "critical_issue_hinted_in_comprehension",
-      "critical_bug_in_feature_X", "system_level_bug_detected",
-      "integration_conflict_on_merge_ABC",
-      "security_vulnerability_found_in_M", "security_review_passed_for_module",
-      "performance_bottleneck_in_N", "module_performance_optimized", "performance_optimization_ineffective_or_problematic",
-      "prioritize_feature_X_development", "halt_feature_Y_pending_review",
-      "feature_X_depends_on_feature_Y", "component_A_depends_on_component_B",
-      "anticipate_integration_soon_for_feature_X", "anticipate_coding_soon_for_feature_X", "anticipate_testing_soon_for_feature_Y",
-      "research_phase_A_complete", "problem_research_blocker_identified",
-      "feature_overview_spec_created", "architecture_defined_for_module_X",
-      "devops_build_system_initialized", "devops_ci_pipeline_stub_created", "devops_config_management_initialized", "devops_devops_foundations_setup_complete",
-      "framework_boilerplate_created",
-      "debug_fix_proposed_for_feature_X", "debug_analysis_complete_for_feature_X",
-      "documentation_updated_for_feature_X", "major_documentation_milestone_reached",
-      "mcp_tool_execution_failed",
-      "firecrawl_action_successful", "firecrawl_action_partial_failure",
-      "deployment_successful_to_env", "deployment_failed_to_env",
-      "iac_apply_successful", "ci_pipeline_triggered",
-      "reproducing_test_created_for_bug", "feature_test_run_failed",
-      "branch_creation_needed", "branch_status_active_local", "branch_status_active_on_remote",
-      "branch_status_merged", "branch_status_integration_ready", "branch_remote_not_found",
-      "branch_push_failed", "branch_merge_failed_conflicts",
-      "github_branch_info_updated",
-      "documentation_creation_needed", "documentation_file_registered", "documentation_missing_for_feature_X",
-      "documentation_registry_updated"
-    ],
-    "interpretationLogic": {
-      "keywordsToSignalType": {
-        "test plan complete": "test_plan_complete_for_feature_X",
-        "tests implemented": "tests_implemented_for_feature_X",
-        "coding needed": "coding_needed_for_feature_X",
-        "feature ready for coding": "coding_needed_for_feature_X",
-        "test readiness": "tests_implemented_for_feature_X",
-        "initialization complete": "project_initialization_complete",
-        "scaffolding complete": "framework_scaffolding_complete",
-        "coding complete": "coding_complete_for_feature_X",
-        "tests pass": "coding_complete_for_feature_X", // Assuming tests pass implies coding complete for that iteration
-        "integration complete": "integration_complete_for_features_XYZ",
-        "system validation complete": "system_validation_complete",
-        "critical bug": "critical_bug_in_feature_X",
-        "environment error": "critical_bug_in_feature_X",
-        "debug analysis complete": "debug_analysis_complete_for_feature_X",
-        "fix proposed": "debug_fix_proposed_for_feature_X",
-        "coder attempt complete": "coding_attempt_complete_for_feature",
-        "branch created": "branch_status_active_local", // Initial status
-        "branch pushed": "branch_status_active_on_remote",
-        "branch merged": "branch_status_merged",
-        "branch available on remote": "branch_status_active_on_remote",
-        "integration successful for branch": "branch_status_merged",
-        "documentation created": "documentation_file_registered",
-        "report generated": "documentation_file_registered",
-        "spec created": "documentation_file_registered"
-      },
-      "featureNameExtractionRegex": "(?:feature|module|component|CR|Change Request) '([^']*)'",
-      "filePathExtractionPatterns": {
-        "genericPath": "`([^`]+\\.(?:md|txt|json|py|js|java|cs|html|css|xml|yaml|yml|drawio|pdf|png|jpg|jpeg|gif|csv))`", // General file path
-        "docPath": "(?:document|report|specification|plan|file|output) (?:at|is|saved at|path is) `([^`]+\\.(?:md|txt|drawio|pdf|xml))`",
-        "codeFilePath": "`([^`]+\\.(?:py|js|java|cs|html|css|rb|go|php|swift|kt|kts|ipynb))`",
-        "testPlanPath": "test plan.*?`([^`]+testplan[^`]*\\.md)`",
-        "specPath": "specification.*?`([^`]+(?:spec|overview)[^`]*\\.md)`",
-        "architecturePath": "architecture.*?`([^`]+architecture[^`]*\\.md)`"
-      },
-      "registryUpdatesLogic": { // Specific logic for Pheromone Scribe to update registries
-        "githubBranch": {
-          "creationKeywords": ["branch created", "new branch", "created branch", "initialized branch"],
-          "pushKeywords": ["branch pushed", "pushed to remote", "is on origin", "now on remote", "available on remote"],
-          "mergeKeywords": ["branch merged", "merged into", "integration successful for branch", "successfully integrated"],
-          "deleteKeywords": ["branch deleted", "removed branch"], // Less common for swarm to delete, but possible
-          "notFoundKeywords": ["not found on remote", "does not exist on origin", "missing from remote"],
-          "conflictKeywords": ["merge conflict", "conflicts detected"],
-          "pushFailKeywords": ["push failed", "failed to push"],
-          "extractors": {
-            "branchName": "(?:branch|feature branch|source branch|remote branch) `?([^'` ]+)`?", // More flexible: optional backticks, no spaces in name
-            "baseBranch": "(?:from|based on|off of) `?([^'` ]+)`?",
-            "targetBranch": "(?:into|target branch|merged to) `?([^'` ]+)`?",
-            "associatedId": "(?:for feature|for CR|related to|for task|associated with) `?([^'` ]+)`?"
-          },
-          "statusMapping": { // Maps NL summary events to branch statuses
-            "created_locally": "active_local",
-            "created_and_pushed": "active_on_remote",
-            "pushed_to_remote": "active_on_remote",
-            "merged_successfully": "merged",
-            "remote_not_found": "error_remote_not_found",
-            "merge_conflicts": "active_on_remote_conflicts", // still active, but needs resolution
-            "push_failed": "active_local_push_failed" // merged locally but couldn't push target
-          }
-        },
-        "documentation": {
-          "creationKeywords": ["document created", "report generated", "specification written", "plan finalized", "file created", "output generated", "documentation file is", "saved document"],
-          "updateKeywords": ["document updated", "report revised", "file updated", "documentation revised"],
-          "extractors": {
-            "filePath": "(?:path is|file is|saved at|located at|document available at|report at):? `([^`]+\\.(?:md|txt|pdf|json|csv|xml|html|drawio|png|jpg))`",
-            "fileName": "file name `([^`]+)`", // If explicitly mentioned
-            "docType": "(?:as an?|type is|document type:|kind of) `?([^'`_ ]+(?:spec|plan|report|overview|guide|manual|config|architecture|summary|log|data|diagram|image))`?", // Heuristic
-            "description": "(?:description is|purpose:|content includes|summarizes|details) \"([^\"]+)\"|The document ([^.]+)\\.",
-            "associatedId": "(?:for feature|for CR|related to|documenting|for module|for project) `?([^'` ]+)`?"
-          }
-        }
-      },
-      "defaultSignalStrength": {
-        "state": 1.0, "need": 1.0, "problem": 1.2, "branch_info": 1.0, "doc_info": 1.0
-      },
-      "categoryMapping": {
-        "test_plan_complete_for_feature_X": "state", "tests_implemented_for_feature_X": "state",
-        "coding_needed_for_feature_X": "need", "project_initialization_complete": "state",
-        "framework_scaffolding_complete": "state", "coding_complete_for_feature_X": "state",
-        "integration_complete_for_features_XYZ": "state", "system_validation_complete": "state",
-        "critical_bug_in_feature_X": "problem", "debug_analysis_complete_for_feature_X": "state",
-        "debug_fix_proposed_for_feature_X": "state", "coding_attempt_complete_for_feature": "state",
-        "branch_status_active_local": "state", "branch_status_active_on_remote": "state",
-        "branch_status_merged": "state", "branch_remote_not_found": "problem",
-        "documentation_file_registered": "state", "documentation_missing_for_feature_X": "problem",
-        "github_branch_info_updated": "branch_info", "documentation_registry_updated": "doc_info"
-      }
-    }
-  },
   "signals": [
     {
-      "id": "bootstrap-initial-signal-001",
+      "id": "example-init-001",
       "signalType": "project_initialization_needed",
-      "target": "NewProject",
+      "target": "ExampleProject",
       "category": "need",
-      "strength": 1.5,
-      "message": "System initialized. Project setup required.",
+      "strength": 0.85,
+      "message": "Example: Project initialization is required. Overwrite this signal.",
       "data": {
         "initial_directive_type": "user_blueprint",
-        "payload_path": "path/to/user_blueprint.md"
+        "payload_path": "path/to/your/blueprint.md"
       },
-      "timestamp_created": "2023-10-27T00:00:00Z",
-      "last_updated_timestamp": "2023-10-27T00:00:00Z"
-    }
-  ],
-  "github_branch_registry": [
+      "timestamp_created": "YYYY-MM-DDTHH:MM:SSZ",
+      "last_updated_timestamp": "YYYY-MM-DDTHH:MM:SSZ"
+    },
     {
-      "branch_name": "main",
-      "status": "active_on_remote",
-      "base_branch": null,
-      "associated_feature_or_cr_id": "project_mainline",
-      "remote_exists": true,
-      "creation_timestamp": "2023-10-27T00:00:00Z",
-      "last_activity_timestamp": "2023-10-27T00:00:00Z",
-      "last_commit_hash": "initial_commit_hash_placeholder",
-      "merged_into": null,
-      "merged_timestamp": null,
-      "description": "Main development branch for the project."
+      "id": "example-priority-001",
+      "signalType": "prioritize_feature_X_development",
+      "target": "ExampleFeature",
+      "category": "priority",
+      "strength": 4.5,
+      "message": "Example: High priority task - focus development on ExampleFeature. Replace this message.",
+      "data": {
+        "prd_path": "docs/example_prd.md",
+        "relevant_prd_sections": [
+          "Section 1.A",
+          "Section 5.B (Critical Example)",
+          "FR-EXAMPLE-001",
+          "FR-EXAMPLE-002"
+        ],
+        "specific_data_paths_to_use": [
+          "data/example_data_source_1/",
+          "data/example_data_source_2/"
+        ],
+        "data_source_instruction": "EXAMPLE INSTRUCTION: Use only specified data sources. DO NOT use placeholder data in actual runs. This is an example.",
+        "env_details": {
+          "NEO4J_URI": "bolt://example-host:7687",
+          "NEO4J_USER": "user_placeholder",
+          "NEO4J_PASSWORD": "password_placeholder",
+          "NEO4J_DATABASE": "example_db"
+        },
+        "user_directive": "EXAMPLE DIRECTIVE: Focus solely on implementing ExampleFeature using the specified data sources. Overwrite this directive."
+      },
+      "timestamp_created": "YYYY-MM-DDTHH:MM:SSZ",
+      "last_updated_timestamp": "YYYY-MM-DDTHH:MM:SSZ"
+    },
+    {
+      "id": "example-state-001",
+      "signalType": "framework_scaffolding_complete",
+      "target": "ExampleProject",
+      "category": "state",
+      "strength": 1.0,
+      "message": "Example: Framework scaffolding has been completed. This is an example signal.",
+      "data": {
+        "report_path": "docs/example_scaffold_report.md",
+        "scaffolded_modules": ["module_A_example", "module_B_example"]
+      },
+      "timestamp_created": "YYYY-MM-DDTHH:MM:SSZ",
+      "last_updated_timestamp": "YYYY-MM-DDTHH:MM:SSZ"
     }
-    // Example of another branch entry:
-    // {
-    //   "branch_name": "feature/user-authentication",
-    //   "status": "active_on_remote", // statuses: active_local, active_on_remote, merged, stale, error_remote_not_found, active_on_remote_conflicts
-    //   "base_branch": "main",
-    //   "associated_feature_or_cr_id": "FEAT-101",
-    //   "remote_exists": true,
-    //   "creation_timestamp": "2023-10-28T10:00:00Z",
-    //   "last_activity_timestamp": "2023-10-28T14:30:00Z",
-    //   "last_commit_hash": "a1b2c3d4e5f6",
-    //   "merged_into": null,
-    //   "merged_timestamp": null,
-    //   "description": "Development branch for User Authentication feature."
-    // }
   ],
   "documentation_registry": [
     {
-      "file_path": "docs/Master_Project_Plan.md",
-      "file_name": "Master_Project_Plan.md",
-      "document_type": "project_plan", // e.g., project_plan, feature_specification, architecture_overview, test_plan, research_report, api_docs, integration_report, etc.
-      "description": "Initial master project plan outlining scope, features, and timeline.",
-      "associated_feature_or_cr_id": "NewProject",
-      "version": "1.0",
-      "creation_timestamp": "2023-10-27T01:00:00Z",
-      "last_updated_timestamp": "2023-10-27T01:00:00Z",
-      "keywords": ["project plan", "initialization", "roadmap"]
+      "file_path": "docs/Example_Document_1.md",
+      "description": "Example: General project documentation file. Replace this entry.",
+      "type": "general_documentation",
+      "last_updated_timestamp": "YYYY-MM-DDTHH:MM:SSZ"
+    },
+    {
+      "file_path": "docs/Example_Specification_v1.md",
+      "description": "Example: Specification document for a core feature. Overwrite this.",
+      "type": "specification",
+      "last_updated_timestamp": "YYYY-MM-DDTHH:MM:SSZ"
     }
-    // Example of another documentation entry:
-    // {
-    //   "file_path": "docs/architecture/CoreServices_Architecture_v0.1.md",
-    //   "file_name": "CoreServices_Architecture_v0.1.md",
-    //   "document_type": "architecture_overview",
-    //   "description": "High-level architecture for core backend services.",
-    //   "associated_feature_or_cr_id": "CORE-SERVICES",
-    //   "version": "0.1",
-    //   "creation_timestamp": "2023-10-28T11:00:00Z",
-    //   "last_updated_timestamp": "2023-10-28T11:00:00Z",
-    //   "keywords": ["architecture", "backend", "microservices", "core"]
-    // }
   ]
 }
