@@ -159,6 +159,7 @@
       "groups": [
         "read",
         "edit",
+        "command",
         "mcp"
       ],
       "source": "project"
